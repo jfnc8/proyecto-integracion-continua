@@ -1,0 +1,26 @@
+name: CI Proyecto
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar archivos
+        run: ls -la
+      - name: Construir con Docker
+        run: docker compose build
+      - name: Levantar servicios
+        run: docker compose up -d
+      - name: Esperar y probar app
+        run: |
+          sleep 15
+          curl -f http://localhost:5000/salud
+          curl -f http://localhost:5000/usuarios
+      - name: Apagar servicios
+        run: docker compose down
