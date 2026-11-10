@@ -43,7 +43,27 @@ def salud():
         "mysql": "conectado" if conectado else "desconectado"
     })
 
+@app.route("/usuarios")
+def usuarios():
+    conn = None
+    cursor = None
+    try:
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM usuarios")
+        datos = cursor.fetchall()
+        return jsonify(datos)
+    except mysql.connector.Error:
+        return jsonify({
+            "error": "No se pudo consultar la base de datos"
+        }), 503
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if conn is not None and conn.is_connected():
+            conn.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 

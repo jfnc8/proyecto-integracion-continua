@@ -193,9 +193,8 @@
     Panel de monitoreo para una aplicación desarrollada
     con Python y Flask, conectada a una base de datos
     MySQL mediante contenedores Docker.
-    Permite verificar la disponibilidad de los servicios,
-    comprobar la comunicación entre contenedores
-    y supervisar el funcionamiento de la API.
+    Permite verificar la comunicación entre servicios
+    y consultar los endpoints de la API.
   </p>
 
   <div class="grid">
@@ -233,17 +232,21 @@
     </div>
 
     <div class="endpoint">
-      <code>GET /</code>
-      <span class="method">DASHBOARD</span>
+      <code>GET /usuarios</code>
+      <span class="method">CONSULTA MYSQL</span>
     </div>
 
     <div class="endpoint">
-      <code>GET /salud</code>
-      <span class="method">PANEL WEB</span>
+      <code>GET /</code>
+      <span class="method">DASHBOARD</span>
     </div>
   </div>
 
   <div class="actions">
+    <a href="/usuarios" class="button">
+      Consultar usuarios
+    </a>
+
     <a href="/api/salud" class="button secondary">
       Ver respuesta JSON
     </a>
@@ -304,4 +307,3 @@
 
 </body>
 </html>
-

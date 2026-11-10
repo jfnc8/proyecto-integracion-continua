@@ -1,4 +1,3 @@
-
 name: CI Proyecto
 
 on:
@@ -10,44 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Verificar archivos
         run: ls -la
-
       - name: Construir con Docker
         run: docker compose build
-
       - name: Levantar servicios
         run: docker compose up -d
-
       - name: Esperar y probar app
         run: |
-          echo "Esperando disponibilidad de Flask y MySQL..."
-
-          for i in $(seq 1 30); do
-            if curl -fsS http://localhost:5000/api/salud \
-              | grep -q '"mysql":"conectado"'; then
-              echo "Flask y MySQL funcionan correctamente"
-              exit 0
-            fi
-
-            echo "Intento $i: esperando servicios..."
-            sleep 2
-          done
-
-          echo "Error: los servicios no están disponibles"
-          exit 1
-
-      - name: Verificar dashboard
-        run: |
-          curl -fsS http://localhost:5000/salud \
-            | grep -q "Monitor de servicios"
-          echo "Dashboard funcionando correctamente"
-
+          sleep 15
+          curl -f http://localhost:5000/salud
+          curl -f http://localhost:5000/usuarios
       - name: Apagar servicios
-        if: always()
         run: docker compose down
