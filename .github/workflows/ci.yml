@@ -1,3 +1,4 @@
+
 name: CI Proyecto
 
 on:
@@ -9,18 +10,50 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Verificar archivos
-        run: ls -la
-      - name: Construir con Docker
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Construir contenedores
         run: docker compose build
-      - name: Levantar servicios
+
+      - name: Iniciar servicios
         run: docker compose up -d
-      - name: Esperar y probar app
+
+      - name: Verificar Flask y MySQL
         run: |
-          sleep 15
-          curl -f http://localhost:5000/salud
-          curl -f http://localhost:5000/usuarios
-      - name: Apagar servicios
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:5000/api/salud \
+              | grep -q '"mysql":"conectado"'; then
+              echo "Flask y MySQL conectados"
+              exit 0
+            fi
+
+            echo "Esperando servicios: intento $i"
+            sleep 2
+          done
+
+          docker compose logs
+          exit 1
+
+      - name: Verificar dashboard
+        run: |
+          curl -fsS http://localhost:5000/salud \
+            -o dashboard.html
+
+          grep -q "Monitor de servicios" dashboard.html
+          echo "Dashboard funcionando"
+
+      - name: Verificar usuarios
+        run: |
+          curl -fsS http://localhost:5000/usuarios \
+            -o usuarios.json
+
+          python3 -c 'import json; d=json.load(open("usuarios.json")); assert isinstance(d,list) and len(d)>=2, "No se encontraron los usuarios esperados"'
+
+          echo "Consulta de usuarios correcta"
+
+      - name: Apagar contenedores
+        if: always()
         run: docker compose down
