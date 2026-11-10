@@ -54,6 +54,10 @@ jobs:
 
           echo "Consulta de usuarios correcta"
 
+      - name: Validar integridad de usuarios MySQL
+        run: python3 tests/test_usuarios.py
+
+
       - name: Apagar contenedores
         if: always()
         run: docker compose down
