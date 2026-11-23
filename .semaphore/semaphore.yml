@@ -81,6 +81,10 @@ blocks:
           commands:
             - echo "Running type checks in container..."
             - echo "Type checking passed successfully!"
+      agent:
+        machine:
+          type: f1-standard-2
+          os_image: ubuntu2404
   - name: "\U0001F510 Security"
     dependencies:
       - "\U0001F6E0️ Setup"
