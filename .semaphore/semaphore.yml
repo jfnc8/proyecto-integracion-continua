@@ -2,7 +2,7 @@ version: v1.0
 name: "\U0001F31F Fan-In/Fan-Out Pipeline"
 agent:
   machine:
-    type: e2-standard-2
+    type: f1-standard-2
     os_image: ubuntu2404
   containers:
     - name: main
