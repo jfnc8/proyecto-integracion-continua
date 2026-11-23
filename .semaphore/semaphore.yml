@@ -29,6 +29,10 @@ blocks:
             - echo "Checking out code..."
             - echo "Installing project dependencies..."
             - echo "Setup completed successfully!"
+      agent:
+        machine:
+          type: f1-standard-2
+          os_image: ubuntu2404
   - name: "\U0001F9EA Unit Tests"
     dependencies:
       - "\U0001F6E0️ Setup"
